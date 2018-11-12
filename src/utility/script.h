@@ -10,7 +10,7 @@
 namespace Animation
 {
 
-/// \brief Represents a single Script as a list of Scripts::Steps.
+/// \brief Represents a single Script as a list of Animation::Steps.
 class Script
 {
 public:
