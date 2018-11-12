@@ -10,7 +10,7 @@ HEADERS += \
     src/utility/step.h \
     src/utility/script.h \
     src/utility/animator.h \
-    src/Animation2.h
+    src/Animation.h
 
 SOURCES += \
     src/utility/step.cpp \
