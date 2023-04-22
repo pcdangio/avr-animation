@@ -1,4 +1,4 @@
-/// \file step.h
+/// \file animation/step.h
 /// \brief Defines the Animation::Step class.
 #ifndef STEP_H
 #define STEP_H
