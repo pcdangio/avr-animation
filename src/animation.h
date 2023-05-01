@@ -3,8 +3,14 @@
 #ifndef ANIMATION_H
 #define ANIMATION_H
 
-#include "utility/animator.h"
-#include "utility/script.h"
-#include "utility/step.h"
+// animation
+#include <animation/step.hpp>
+#include <animation/script.hpp>
 
-#endif // ANIMATION_H
+// steps
+#include <animation/steps/wait.hpp>
+#include <animation/steps/digital/level.hpp>
+#include <animation/steps/analog/level.hpp>
+#include <animation/steps/analog/function.hpp>
+
+#endif
