@@ -1,72 +1,104 @@
-#include "script.h"
+#include <animation/script.hpp>
 
-using namespace Animation;
+using namespace animation;
 
-Script::Script(unsigned int ID, Step* Steps, int NSteps, long DesiredRuns)
+// CONSTRUCTORS
+script::script()
+    : m_steps_begin(nullptr),
+      m_steps_end(nullptr),
+      m_current_step(nullptr)
+{}
+script::~script()
 {
-  Script::mID = ID;
-  Script::mSteps = Steps;
-  Script::mNSteps = NSteps;
-  Script::mDesiredRuns = DesiredRuns;
-  Script::mActualRuns = 0;
-  Script::mCurrentStepStartTime = 0;
-  // Use a current step of -1 so that the first step can be transitioned into.
-  Script::mCurrentStep = -1;
-  Script::mStopRequested = false;
+    // Clear steps array.
+    script::clear();
 }
-Script::~Script()
+
+// CONFIGURATION
+void script::build(animation::step** steps, size_t step_count)
 {
-  delete [] Script::mSteps;
+    // Clear any existing steps.
+    script::clear();
+
+    // Store array pointer.
+    script::m_steps_begin = steps;
+    script::m_steps_end = script::m_steps_begin + step_count;
 }
-bool Script::Spin()
+void script::clear()
 {
-  // Check if we are within the number of desired repeats.
-  if(Script::mDesiredRuns == -1 || Script::mActualRuns < Script::mDesiredRuns)
-  {
-    // Pull the current step's time Duration to check if it has elapsed.
-    // A current step of -1 means the Script hasn't started yet, so transition to step 0.
-    if(Script::mCurrentStep == -1 || millis() - Script::mCurrentStepStartTime >= Script::mSteps[Script::mCurrentStep].Duration)
+    // Check if array is already empty.
+    if(!script::m_steps_begin)
     {
-      // The current step's time has elapsed.  Transition to next step.
-      // First increment the current step.  Check if we can increment or if we need to wrap back to step 0.
-      if(Script::mCurrentStep < Script::mNSteps - 1)
-      {
-        // Continue iterating forward through steps.
-        Script::mCurrentStep++;
-      }
-      else
-      {
-        // Last step has been completed, restart.
-        Script::mCurrentStep = 0;
-        // Increment actual repeats.
-        Script::mActualRuns++;
-        // Check if the Script repeats are complete.
-        if(Script::mStopRequested || Script::mActualRuns == Script::mDesiredRuns)
-        {
-          // The Script is complete, return true.
-          return true;
-        }
-      }
-      // Set the Script transition time.
-      Script::mCurrentStepStartTime = millis();
-      // Execute the Script action.
-      digitalWrite(Script::mSteps[Script::mCurrentStep].Pin, Script::mSteps[Script::mCurrentStep].State);
+        return;
     }
 
-    // If this point is reached, the Script is not complete.
+    // Clean up step pointers.
+    for(animation::step** step = script::m_steps_begin; step != script::m_steps_end; ++step)
+    {
+        delete *step;
+    }
+
+    // Clean up step array.
+    delete [] script::m_steps_begin;
+
+    // Reset array pointers.
+    script::m_steps_begin = nullptr;
+    script::m_steps_end = nullptr;
+}
+
+// RUN
+void script::start()
+{
+    // Set position to start of step array.
+    script::m_current_step = script::m_steps_begin;
+
+    // Start the step if it exists.
+    if(script::m_current_step)
+    {
+        (*script::m_current_step)->start();
+    }
+}
+bool script::run_once()
+{
+    // Check if there is a current step.
+    if(!script::m_current_step)
+    {
+        // Indicate that script is done.
+        return true;
+    }
+
+    // Run the current step and check if it's complete.
+    if((*script::m_current_step)->run_once())
+    {
+        // Increment the current step and check for script completion.
+        if(++script::m_current_step == script::m_steps_end)
+        {
+            // Indicate script complete.
+            return true;
+        }
+
+        // Start the new step.
+        (*script::m_current_step)->start();
+    }
+
     return false;
-  }
-  else
-  {
-    // The Script has reached or exceeded the number of desired repeats.
-    return true;
-  }
 }
-void Script::Stop()
+void script::run()
 {
-  Script::mStopRequested = true;
+    // Iterate through the step array.
+    for(script::m_current_step = script::m_steps_begin; script::m_current_step != script::m_steps_begin; ++script::m_current_step)
+    {
+        // Start the step.
+        (*script::m_current_step)->start();
+
+        // Run the step until its complete.
+        while(!(*script::m_current_step)->run_once())
+        {}
+    }
 }
-unsigned int Script::ID()
+
+// PROPERTIES
+size_t script::step_count() const
 {
-  return Script::mID;
+    return script::m_steps_end - script::m_steps_begin;
 }
