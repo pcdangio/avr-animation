@@ -1,6 +1,6 @@
-#include <animation/step/wait.hpp>
+#include <animation/steps/wait.hpp>
 
-using namespace animation::step;
+using namespace animation::steps;
 
 // CONSTRUCTORS
 wait::wait(uint32_t duration)
@@ -8,14 +8,12 @@ wait::wait(uint32_t duration)
       m_start_time(0)
 {}
 
-// CONTROL
+// RUN
 void wait::start()
 {
     // Set start time.
     wait::m_start_time = millis();
 }
-
-// RUN
 bool wait::run_once()
 {
     // Check if duration has passed.

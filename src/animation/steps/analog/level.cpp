@@ -1,6 +1,6 @@
-#include <animation/step/analog/level.hpp>
+#include <animation/steps/analog/level.hpp>
 
-using namespace animation::step::analog;
+using namespace animation::steps::analog;
 
 // CONSTRUCTORS
 level::level(uint8_t pin, uint8_t level)
@@ -8,13 +8,11 @@ level::level(uint8_t pin, uint8_t level)
       m_level(level)
 {}
 
-// CONTROL
+// RUN
 void level::start()
 {
     // No start routine required.
 }
-
-// RUN
 bool level::run_once()
 {
     // Set the analog level.

@@ -1,6 +1,6 @@
-#include <animation/step/digital/level.hpp>
+#include <animation/steps/digital/level.hpp>
 
-using namespace animation::step::digital;
+using namespace animation::steps::digital;
 
 // CONSTRUCTORS
 level::level(uint8_t pin, bool level)
@@ -8,13 +8,11 @@ level::level(uint8_t pin, bool level)
       m_level(level)
 {}
 
-// CONTROL
+// RUN
 void level::start()
 {
     // No start routine required.
 }
-
-// RUN
 bool level::run_once()
 {
     // Set the digital level.

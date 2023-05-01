@@ -1,19 +1,19 @@
-/// \file animation/step/digital/level.hpp
-/// \brief Defines the animation::step::digital::level class.
-#ifndef ANIMATION___STEP___DIGITAL___LEVEL_H
-#define ANIMATION___STEP___DIGITAL___LEVEL_H
+/// \file animation/steps/digital/level.hpp
+/// \brief Defines the animation::steps::digital::level class.
+#ifndef ANIMATION___STEPS___DIGITAL___LEVEL_H
+#define ANIMATION___STEPS___DIGITAL___LEVEL_H
 
 // animation
-#include <animation/step/step.hpp>
+#include <animation/step.hpp>
 
 namespace animation {
-namespace step {
+namespace steps {
 /// \brief Contains all code for digital animation steps.
 namespace digital {
 
 /// \brief An animation step that sets the level of a digital output pin.
 class level
-    : public animation::step::step
+    : public animation::step
 {
 public:
     // CONSTRUCTORS
@@ -21,11 +21,9 @@ public:
     /// \param pin The digital output pin to animate.
     /// \param level The output level of the pin for this animation step.
     level(uint8_t pin, bool level);
-
-    // CONTROL
-    void start() override;
-
+    
     // RUN
+    void start() override;
     bool run_once() override;
 
 private:

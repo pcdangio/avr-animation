@@ -1,28 +1,27 @@
-/// \file animation/step/wait.hpp
-/// \brief Defines the animation::step::wait class.
-#ifndef ANIMATION___STEP___WAIT_H
-#define ANIMATION___STEP___WAIT_H
+/// \file animation/steps/wait.hpp
+/// \brief Defines the animation::steps::wait class.
+#ifndef ANIMATION___STEPS___WAIT_H
+#define ANIMATION___STEPS___WAIT_H
 
 // animation
-#include <animation/step/step.hpp>
+#include <animation/step.hpp>
 
 namespace animation {
-namespace step {
+/// \brief Contains all code for predefined animation steps.
+namespace steps {
 
 /// \brief An animation step that waits for a specified duration.
 class wait
-    : public animation::step::step
+    : public animation::step
 {
 public:
     // CONSTRUCTORS
     /// \brief Creates a new wait animation step instance.
     /// \param duration The duration of time to wait, in milliseconds.
     wait(uint32_t duration);
-
-    // CONTROL
-    void start() override;
-
+    
     // RUN
+    void start() override;
     bool run_once() override;
 
 private:
