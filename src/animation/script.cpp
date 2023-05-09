@@ -70,7 +70,7 @@ bool script::copy_step(size_t index, size_t copy_index, size_t step_count, size_
 
     // Get reference to end destination and check for validity.
     script::entry* destination_end = destination_begin + step_count * copy_count;
-    if(destination_end >= script::m_steps_end)
+    if(destination_end > script::m_steps_end)
     {
         return false;
     }
@@ -84,7 +84,7 @@ bool script::copy_step(size_t index, size_t copy_index, size_t step_count, size_
 
     // Get reference to end source and check for validity.
     script::entry* source_end = source_begin + step_count;
-    if(source_end >= script::m_steps_end)
+    if(source_end > script::m_steps_end)
     {
         return false;
     }
