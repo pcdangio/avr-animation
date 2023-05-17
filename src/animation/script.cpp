@@ -128,7 +128,7 @@ void script::clear()
     }
 }
 
-// RUN
+// CONTROL
 void script::start()
 {
     // Validate script.
@@ -145,6 +145,23 @@ void script::start()
     // Start the current step.
     script::m_current_step->start();
 }
+void script::stop(bool reset)
+{
+    // Reset the current step.
+    script::m_current_step = nullptr;
+
+    // Reset states if necessary.
+    if(reset)
+    {
+        reset_state();
+    }
+}
+void script::reset_state()
+{
+    // Do nothing in base implementation.
+}
+
+// RUN
 bool script::run_once()
 {
     // Validate current step (means that script was started).

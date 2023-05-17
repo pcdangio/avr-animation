@@ -46,8 +46,13 @@ public:
     /// \brief Clears all steps in the script.
     void clear();
 
-    // RUN
+    // CONTROL
     void start() override;
+    /// \brief Stops the script.
+    /// \param reset Indicates if animated entities should be reset to their default values.
+    void stop(bool reset = false);
+
+    // RUN
     bool run_once() override;
     /// \brief Runs the script (and blocks) until it is complete.
     /// \note start() does not need to be called before using this method.
@@ -56,6 +61,11 @@ public:
     // PROPERTIES
     /// \brief The number of steps in the script.
     const size_t step_count;
+
+protected:
+    // CONTROL
+    /// \brief Resets the state of all animated entities to their default values.
+    virtual void reset_state();
 
 private:
     // ENTRY
