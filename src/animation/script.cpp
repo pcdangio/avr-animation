@@ -4,64 +4,15 @@ using namespace animation;
 
 // CONSTRUCTORS
 script::script(size_t step_count)
-    : m_steps(step_count),
+    : steps(step_count),
       m_current_step(nullptr)
 {}
-
-// CONFIGURATION
-bool script::set_step(size_t index, const std::shared_ptr<animation::step>& step)
-{
-    // Validate index.
-    if(index >= script::m_steps.size)
-    {
-        return false;
-    }
-
-    // Store step at index.
-    script::m_steps[index] = step;
-
-    return true;
-}
-bool script::set_step(size_t index, size_t copy_index)
-{
-    // Validate indices.
-    if(index >= script::m_steps.size || copy_index >= script::m_steps.size)
-    {
-        return false;
-    }
-
-    // Copy source index to destination index.
-    script::m_steps[index] = script::m_steps[copy_index];
-
-    return true;
-}
-bool script::clear_step(size_t index)
-{
-    // Validate index.
-    if(index >= script::m_steps.size)
-    {
-        return false;
-    }
-
-    // Reset shared_ptr at index.
-    script::m_steps[index].reset();
-
-    return true;
-}
-void script::clear()
-{
-    // Reset all shared_ptrs in the array.
-    for(auto entry = script::m_steps.begin(); entry != script::m_steps.end(); ++entry)
-    {
-        entry->reset();
-    }
-}
 
 // CONTROL
 void script::start()
 {
     // Set current step to beginning of array.
-    script::m_current_step = script::m_steps.begin();
+    script::m_current_step = script::steps.begin();
 
     // Start step if valid.
     if(script::m_current_step->valid())
@@ -100,7 +51,7 @@ bool script::run_once()
     if((*script::m_current_step)->run_once())
     {
         // Increment the current step and check for script completion.
-        if(++script::m_current_step == script::m_steps.end())
+        if(++script::m_current_step == script::steps.end())
         {
             // Reset current step to nullptr.
             script::m_current_step = nullptr;
@@ -117,7 +68,7 @@ bool script::run_once()
 void script::run()
 {
     // Iterate through the step array.
-    for(script::m_current_step = script::m_steps.begin(); script::m_current_step != script::m_steps.end(); ++script::m_current_step)
+    for(script::m_current_step = script::steps.begin(); script::m_current_step != script::steps.end(); ++script::m_current_step)
     {
         // Validate step.
         if(!script::m_current_step->valid())

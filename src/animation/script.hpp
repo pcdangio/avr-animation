@@ -22,23 +22,9 @@ public:
     /// \param step_count The number of steps in the script.
     script(size_t step_count);
 
-    // CONFIGURATION
-    /// \brief Sets the step at a specified position in the script.
-    /// \param index The index to assign the new step to.
-    /// \param step The step instance to set.
-    /// \return TRUE if the step was set successfully, FALSE if index out of range.
-    bool set_step(size_t index, const std::shared_ptr<animation::step>& step);
-    /// \brief Copies an existing step to another position in the script.
-    /// \param index The index to assign the copied step to.
-    /// \param copy_index The index of the step to copy from.
-    /// \return TRUE if the step was set successfully, FALSE if either index is out of range.
-    bool set_step(size_t index, size_t copy_index);
-    /// \brief Clears a step at a desired position in the script.
-    /// \param index The index of the step to clear.
-    /// \return TRUE if the step was cleared successfully, FALSE if the index is out of range.
-    bool clear_step(size_t index);
-    /// \brief Clears all steps in the script.
-    void clear();
+    // STEPS
+    /// \brief The array of steps that make up the script.
+    std::array<std::shared_ptr<animation::step>> steps;
 
     // CONTROL
     void start() override;
@@ -64,8 +50,6 @@ protected:
 
 private:
     // STEPS
-    /// \brief The array of steps that make up the script.
-    std::array<std::shared_ptr<animation::step>> m_steps;
     /// \brief The current step being executed in the script.
     std::iterator<std::shared_ptr<animation::step>> m_current_step;
 };
