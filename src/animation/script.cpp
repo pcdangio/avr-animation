@@ -3,27 +3,31 @@
 using namespace animation;
 
 // CONSTRUCTORS
-script::script(size_t step_count)
-    : steps(step_count),
-      m_current_step(nullptr)
+script::script()
+    : m_step_index(0),
+      m_step(nullptr)
 {}
 
 // CONTROL
 void script::start()
 {
-    // Set current step to beginning of array.
-    script::m_current_step = script::steps.begin();
+    // Reset the current step index to the beginning.
+    script::m_step_index = 0;
 
-    // Start step if valid.
-    if(script::m_current_step->valid())
+    // Get the step for this index.
+    script::m_step.reset(create_step(script::m_step_index));
+
+    // Start step if it's valid.
+    if(script::m_step.valid())
     {
-        (*script::m_current_step)->start();
+        script::m_step->start();
     }
 }
 void script::stop(bool reset)
 {
-    // Reset the current step.
-    script::m_current_step = nullptr;
+    // Reset step index and current step.
+    script::m_step_index = 0;
+    script::m_step.reset();
 
     // Reset states if necessary.
     if(reset)
@@ -40,50 +44,48 @@ void script::reset_state()
 // RUN
 bool script::run_once()
 {
-    // Validate current step.
-    if(!script::m_current_step->valid())
+    // Check if there is a valid current step.
+    if(!script::m_step.valid())
     {
         // Indicate script is complete.
         return true;
     }
 
-    // Run the current step and check if it's complete.
-    if((*script::m_current_step)->run_once())
+    // Run the currest step and check if it's complete.
+    if(script::m_step->run_once())
     {
-        // Increment the current step and check for script completion.
-        if(++script::m_current_step == script::steps.end())
+        // Increment current step and index.
+        script::m_step.reset(create_step(++script::m_step_index));
+
+        // Check if script is complete.
+        if(!script::m_step.valid())
         {
-            // Reset current step to nullptr.
-            script::m_current_step = nullptr;
-            // Indicate script complete.
             return true;
         }
 
-        // Start the new step.
-        (*script::m_current_step)->start();
+        // Start the next step.
+        script::m_step->start();
     }
 
     return false;
 }
 void script::run()
 {
-    // Iterate through the step array.
-    for(script::m_current_step = script::steps.begin(); script::m_current_step != script::steps.end(); ++script::m_current_step)
+    // Reset step index and get first step.
+    script::m_step_index = 0;
+    script::m_step.reset(create_step(script::m_step_index));
+
+    // Iterate until no more steps.
+    while(script::m_step.valid())
     {
-        // Validate step.
-        if(!script::m_current_step->valid())
-        {
-            break;
-        }
-        
         // Start the step.
-        (*script::m_current_step)->start();
+        script::m_step->start();
 
-        // Run the step until its complete.
-        while(!(*script::m_current_step)->run_once())
+        // Run the step until it's complete.
+        while(!script::m_step->run_once())
         {}
-    }
 
-    // Reset current step to nullptr.
-    script::m_current_step = nullptr;
+        // Increment to next step.
+        script::m_step.reset(create_step(++script::m_step_index));
+    }
 }

@@ -19,17 +19,12 @@ class script
 public:
     // CONSTRUCTORS
     /// \brief Creates a new script instance.
-    /// \param step_count The number of steps in the script.
-    script(size_t step_count);
-
-    // STEPS
-    /// \brief The array of steps that make up the script.
-    std::array<std::shared_ptr<animation::step>> steps;
+    script();
 
     // CONTROL
     void start() override;
     /// \brief Stops the script.
-    /// \param reset Indicates if animated entities should be reset to their default values.
+    /// \param reset Indicates if the script's reset_state method will be called.
     void stop(bool reset = false);
 
     // RUN
@@ -38,20 +33,23 @@ public:
     /// \note start() does not need to be called before using this method.
     void run();
 
-    // PROPERTIES
-    /// \brief Get the number of steps in the script.
-    /// \return The number of steps.
-    size_t step_count() const;
-
 protected:
+    // STEPS
+    /// \brief Creates a step to run as part of the script.
+    /// \param index The index of the step to create.
+    /// \return A pointer to the step to run. NULLPTR if script is complete.
+    virtual animation::step* create_step(size_t index) = 0;
+
     // CONTROL
     /// \brief Resets the state of all animated entities to their default values.
     virtual void reset_state();
 
 private:
     // STEPS
-    /// \brief The current step being executed in the script.
-    std::iterator<std::shared_ptr<animation::step>> m_current_step;
+    /// \brief The current step index being run.
+    size_t m_step_index;
+    /// \brief The current step being run.
+    std::unique_ptr<animation::step> m_step;
 };
 
 }
