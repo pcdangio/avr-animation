@@ -6,9 +6,6 @@
 // animation
 #include <animation/step.hpp>
 
-// std
-#include <std.hpp>
-
 /// \brief Contains all code for the Arduino animation library.
 namespace animation {
 
@@ -49,7 +46,7 @@ private:
     /// \brief The current step index being run.
     size_t m_step_index;
     /// \brief The current step being run.
-    std::unique_ptr<animation::step> m_step;
+    animation::step* m_step;
 };
 
 }
